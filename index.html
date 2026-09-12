@@ -17,31 +17,45 @@
       --wine-dark: #290913;
       --gold: #ffd978;
       --cream: #fff8e8;
+      --safe-inline: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));
     }
 
     * { box-sizing: border-box; }
 
-    html, body { height: 100%; }
+    html, body {
+      width: 100%;
+      min-width: 0;
+      height: 100%;
+      overflow: hidden;
+    }
 
     body {
       margin: 0;
-      overflow: hidden;
+      display: grid;
+      place-items: center;
       background: var(--wine-dark);
     }
 
     button {
+      margin: 0;
       font: inherit;
       color: inherit;
+      appearance: none;
+      -webkit-appearance: none;
     }
 
     .game {
       position: relative;
       isolation: isolate;
       display: grid;
+      place-items: stretch center;
       width: 100%;
+      max-width: 100%;
       min-height: 100%;
       min-height: 100dvh;
-      padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1.25rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+      padding-block: max(1rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-bottom));
+      padding-inline: var(--safe-inline);
+      overflow: hidden;
       border: 0;
       text-align: center;
       cursor: pointer;
@@ -112,22 +126,33 @@
       display: grid;
       grid-template-rows: auto 1fr auto;
       align-items: center;
+      justify-items: center;
       width: min(100%, 62rem);
+      max-width: 100%;
       min-height: calc(100dvh - 2.25rem);
-      margin: auto;
+      margin-inline: auto;
       padding: clamp(1.25rem, 4vh, 2.5rem) clamp(1rem, 5vw, 3rem);
     }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: .65rem;
+      display: block;
+      width: 100%;
       margin: 0;
       color: var(--gold);
       font-size: clamp(1.45rem, 5.8vw, 2.3rem);
       font-weight: 700;
       letter-spacing: .06em;
+      line-height: 1.3;
+      text-align: center;
+      text-wrap: balance;
+    }
+
+    .title-part {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      margin-inline: .1em;
+      white-space: nowrap;
     }
 
     .moon {
@@ -144,14 +169,18 @@
       display: grid;
       place-items: center;
       width: 100%;
+      max-width: 100%;
       min-height: 0;
+      margin-inline: auto;
       padding: clamp(.75rem, 3vh, 2rem) 0;
     }
 
     .bucket-scene {
       position: relative;
       grid-area: 1 / 1;
-      width: min(76vw, 25rem);
+      justify-self: center;
+      width: min(76%, 25rem);
+      margin-inline: auto;
       max-height: 66vh;
       transition: opacity .28s ease, transform .28s ease;
       filter: drop-shadow(0 1.1rem 1rem rgba(22, 1, 8, .35));
@@ -202,7 +231,9 @@
       z-index: 4;
       display: grid;
       place-items: center;
-      width: min(94vw, 56rem);
+      justify-self: center;
+      width: min(100%, 56rem);
+      margin-inline: auto;
       max-height: 68vh;
       min-height: min(45vh, 22rem);
       padding: clamp(1.25rem, 5vw, 3.6rem);
@@ -290,6 +321,7 @@
       align-items: center;
       justify-content: center;
       gap: .55rem 1rem;
+      width: 100%;
       margin: 0;
       color: rgba(255, 248, 232, .82);
       font-size: clamp(1.3rem, 5.2vw, 1.8rem);
@@ -345,7 +377,10 @@
   <button class="game phase-ready" id="game" type="button" aria-label="從桶子抽一個新的中秋挑戰">
     <span class="sparkles" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
     <span class="content">
-      <span class="eyebrow"><span class="moon" aria-hidden="true"></span>中秋節 x 誰是賓果王</span>
+      <span class="eyebrow">
+        <span class="title-part"><span class="moon" aria-hidden="true"></span>中秋節 x</span>
+        <span class="title-part">誰是賓果王</span>
+      </span>
       <span class="stage">
         <span class="bucket-scene" aria-hidden="true">
           <span class="draw-slip"></span>
