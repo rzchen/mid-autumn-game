@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#641b32">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>中秋歡樂抽題</title>
+  <title>中秋節 x 誰是賓果王</title>
   <meta name="description" content="中秋家族聚餐的隨機挑戰抽題遊戲">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23641b32'/%3E%3Ccircle cx='32' cy='30' r='19' fill='%23ffd978'/%3E%3Cpath d='M21 47c8-6 14-4 22-1' fill='none' stroke='%23e6a83e' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
   <style>
@@ -125,9 +125,9 @@
       gap: .65rem;
       margin: 0;
       color: var(--gold);
-      font-size: clamp(1rem, 3.8vw, 1.35rem);
+      font-size: clamp(1.45rem, 5.8vw, 2.3rem);
       font-weight: 700;
-      letter-spacing: .12em;
+      letter-spacing: .06em;
     }
 
     .moon {
@@ -205,7 +205,7 @@
       width: min(94vw, 56rem);
       max-height: 68vh;
       min-height: min(45vh, 22rem);
-      padding: clamp(1.5rem, 5vw, 3.6rem);
+      padding: clamp(1.25rem, 5vw, 3.6rem);
       overflow: hidden;
       border: .18rem solid #e4bd65;
       border-radius: 1.25rem;
@@ -224,12 +224,29 @@
       max-width: 24ch;
       margin: 0;
       color: #561329;
-      font-size: clamp(2.15rem, 8.5vw, 5.3rem);
+      font-size: clamp(1.75rem, 8.5vw, 5.3rem);
       font-weight: 800;
       line-height: 1.32;
       letter-spacing: .015em;
       text-wrap: balance;
       text-shadow: 0 .1rem 0 rgba(255, 255, 255, .5);
+    }
+
+    .challenge .phrase {
+      display: inline-block;
+      max-width: 100%;
+      margin-inline: .055em;
+      white-space: nowrap;
+    }
+
+    .challenge .lead {
+      display: block;
+      margin: 0 0 .55em;
+      color: #8c2d49;
+      font-size: .72em;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-align: center;
     }
 
     .challenge.long {
@@ -275,17 +292,8 @@
       gap: .55rem 1rem;
       margin: 0;
       color: rgba(255, 248, 232, .82);
-      font-size: clamp(1rem, 3.8vw, 1.3rem);
+      font-size: clamp(1.3rem, 5.2vw, 1.8rem);
       font-weight: 600;
-    }
-
-    .remaining {
-      padding: .3rem .7rem;
-      border: 1px solid rgba(255, 217, 120, .38);
-      border-radius: 999px;
-      color: var(--gold);
-      font-size: .9em;
-      letter-spacing: .03em;
     }
 
     @keyframes bucket-shake {
@@ -337,7 +345,7 @@
   <button class="game phase-ready" id="game" type="button" aria-label="從桶子抽一個新的中秋挑戰">
     <span class="sparkles" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
     <span class="content">
-      <span class="eyebrow"><span class="moon" aria-hidden="true"></span>中秋歡樂抽題</span>
+      <span class="eyebrow"><span class="moon" aria-hidden="true"></span>中秋節 x 誰是賓果王</span>
       <span class="stage">
         <span class="bucket-scene" aria-hidden="true">
           <span class="draw-slip"></span>
@@ -350,43 +358,68 @@
       </span>
       <span class="hint">
         <span id="hintText">準備好就點一下</span>
-        <span class="remaining" id="remaining">共 24 題</span>
       </span>
     </span>
   </button>
 
   <script>
+    const q = (...parts) => ({ parts, lead: false });
+    const read = (...parts) => ({ parts: ["唸完以下文字", ...parts], lead: true });
+
     const challenges = [
-      "把自己杯子裡的飲料一口喝完",
-      "找現場一位，對他說一句肯定讚美的話",
-      "稱讚左手邊的人",
-      "分享最近最想去的一個地方",
-      "分享小時候最喜歡的卡通",
-      "說出一道最喜歡的家常菜",
-      "說出今天餐桌上最喜歡的一道菜",
-      "模仿一種動物，讓大家猜",
-      "不笑地和另一個人對看五秒",
-      "哼一首歌，讓大家猜歌名",
-      "說出自己最喜歡的季節，並解釋原因",
-      "如果明天放假一天，最想做什麼？",
-      "說出自己最想嘗試的一項新活動",
-      "唸完這段文字：南港展覽館館長晚上趕場幫忙南山廣場場方把鋼彈跟單槓搬到南港展覽館辦場鋼彈觀光展看鋼彈吊單槓往上。當然，官方網站專欄常常綻放萬丈光芒，讓網站上滿滿旁觀呆丸郎按讚逛逛，難波萬，棒！",
-      "今天中秋節慶祝，說一句祝福大家的話",
-      "分享近期一件開心的事",
-      "分享一個自己喜歡的興趣",
-      "最喜歡吃的水果",
-      "最不喜歡吃的食物",
-      "喜歡的團體 or 歌手",
-      "找一個人黑白ㄘㄟˋ，贏對方",
-      "找一個人猜拳，獲勝才算完成",
-      "說出一個含有「月」字的成語或歌名",
-      "擁抱現場一個人"
+      q("把自己杯子裡的", "飲料一口喝完"),
+      q("找現場一位，", "對他說一句", "肯定讚美的話"),
+      q("稱讚左手邊的人"),
+      q("稱讚右手邊的人"),
+      q("分享最近", "最想去的一個地方"),
+      q("分享小時候", "最喜歡的卡通"),
+      q("說出一道", "最喜歡的家常菜"),
+      q("說出今天餐桌上", "最喜歡的一道菜"),
+      q("模仿一種動物，", "讓大家猜"),
+      q("不笑地和另一個人", "對看五秒"),
+      q("哼一首歌，", "讓大家猜歌名"),
+      q("說出自己", "最喜歡的季節，", "並解釋原因"),
+      q("如果明天放假一天，", "最想做什麼？"),
+      q("說出自己", "最想嘗試的", "一項新活動"),
+      q("今天中秋節慶祝，", "說一句", "祝福大家的話"),
+      q("分享近期", "一件開心的事"),
+      q("分享一個", "自己喜歡的興趣"),
+      q("最喜歡吃的水果"),
+      q("最不喜歡吃的食物"),
+      q("喜歡的團體", "or 歌手"),
+      q("找一個人", "黑白ㄘㄟˋ，", "贏對方"),
+      q("找一個人猜拳，", "獲勝才算完成"),
+      q("說出一個", "含有「月」字的", "成語或歌名"),
+      q("擁抱現場一個人"),
+      read(
+        "南港展覽館館長", "晚上趕場幫忙", "南山廣場場方", "把鋼彈跟單槓",
+        "搬到南港展覽館", "辦場鋼彈觀光展", "看鋼彈吊單槓往上。",
+        "當然，官方網站專欄", "常常綻放萬丈光芒，", "讓網站上滿滿",
+        "旁觀呆丸郎按讚逛逛，", "難波萬，棒！"
+      ),
+      read(
+        "四是四，十是十，", "十四是十四，", "四十是四十；",
+        "誰把十四說十適，", "就打他十四；", "誰把四十說適十，", "就打他四十。"
+      ),
+      read(
+        "初一吃素、初二吃素、", "初三吃素、初四吃素、",
+        "初五吃素、初六吃素、", "初七吃素、初八吃素、",
+        "初九吃素、初十吃素"
+      ),
+      read("和尚端湯上塔堂，", "塔滑湯灑湯燙塔"),
+      read(
+        "黑化肥發灰，", "灰化肥發黑；", "黑化肥揮發發灰會揮發，",
+        "灰化肥揮發發黑不揮發"
+      ),
+      q("分享一件", "最近開心感恩的事"),
+      q("找一個人", "跟他 High Five"),
+      q("最喜歡的運動是？"),
+      q("喜歡的一首歌")
     ];
 
     const game = document.querySelector("#game");
     const challenge = document.querySelector("#challenge");
     const hintText = document.querySelector("#hintText");
-    const remaining = document.querySelector("#remaining");
     let drawing = false;
 
     function randomIndex(max) {
@@ -404,6 +437,18 @@
       challenge.classList.toggle("very-long", text.length > 70);
     }
 
+    function renderChallenge(item) {
+      const fragment = document.createDocumentFragment();
+      item.parts.forEach((part, index) => {
+        const phrase = document.createElement("span");
+        phrase.className = `phrase${item.lead && index === 0 ? " lead" : ""}`;
+        phrase.textContent = part;
+        fragment.appendChild(phrase);
+      });
+      challenge.replaceChildren(fragment);
+      sizeText(item.parts.join(""));
+    }
+
     function draw() {
       if (drawing) return;
       drawing = true;
@@ -416,9 +461,7 @@
 
       window.setTimeout(() => {
         const picked = challenges[randomIndex(challenges.length)];
-        challenge.textContent = picked;
-        sizeText(picked);
-        remaining.textContent = "每次從 24 題重抽";
+        renderChallenge(picked);
         hintText.textContent = "再點一下，重新抽題";
         game.classList.remove("phase-drawing");
         game.classList.add("phase-result");
